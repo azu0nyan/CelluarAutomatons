@@ -13,7 +13,7 @@ public class Main {
         EGEngine.instance().startDrawingThread();
 
 
-        CellularAutomaton automaton = new ParityFlipAutomaton(1920 /2   , 1080 /2 );
+        CellularAutomaton automaton = new TimeTunnelAutomaton(1920 /1   , 1080 /1 );
 
         Random r = new Random();
         int seed = r.nextInt();
@@ -44,7 +44,7 @@ public class Main {
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
-            long desiredLength = 50;
+            long desiredLength = 30;
             while (true){
                 long start = System.currentTimeMillis();
                 automaton.step();
