@@ -14,7 +14,9 @@ public class TimeTunnelAutomaton extends CellularAutomaton {
 
     public void initTestData() {
         //fillRect(width / 2 - 128, height / 2 - 128, 256, 256, 3);
-        fillRandomRects(2,2,2,2,32, new int[]{3});
+        //fillOval(width / 2 - 256, height / 2 - 256, 512, 512, 3);
+        fillRect(width / 2 - 256, height / 2 - 256, 512, 512, 3);
+        //fillRandomRects(2,2,2,2,32, new int[]{3});
         torus = true;
     }
 
@@ -31,7 +33,7 @@ public class TimeTunnelAutomaton extends CellularAutomaton {
 
     @Override
     public Color getColorAt(int x, int y) {
-        switch (getCell(x, y)) {
+        switch (getDrawingCell(x, y)) {
             case ready:
                 return new Color(10, 6, 7);
             case alive:

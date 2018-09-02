@@ -21,6 +21,7 @@ public abstract class CellularAutomaton {
         this.width = width;
         this.height = height;
         cells = new int[width][height];
+        drawingCells = cells;
     }
 
     public int getWidth() {
@@ -30,6 +31,9 @@ public abstract class CellularAutomaton {
     public void initTestData() {
 
     }
+
+
+
     long totalTime = 0;
     public void step() {
         long t = System.currentTimeMillis();
@@ -162,6 +166,10 @@ public abstract class CellularAutomaton {
         //return cells[x % width][y % height];
     }
 
+    public int getCellsCount() {
+        return width * height;
+    }
+
     public int getCellLayer(int x, int y, int layer) {
         return (getCell(x, y) >> layer) % 2;
     }
@@ -169,16 +177,13 @@ public abstract class CellularAutomaton {
     public void setXY(int x, int y, int value) {
         cells[x % width][y % height] = value;
     }
-
+    //fillings
+    private int seed = 1;
+    Random r = new Random(seed);
     public void setSeed(int seed) {
         this.seed = seed;
         r = new Random(seed);
     }
-
-    private int seed = 1;
-
-    Random r = new Random(seed);
-
     public void fillRandom(int count, int[] values) {
         for (int i = 0; i < count; i++) {
             int rx = r.nextInt(width);
@@ -214,6 +219,7 @@ public abstract class CellularAutomaton {
             fillOval(x, y, w, h, value);
         }
     }
+
     public void fillOval(int x, int y, int w, int h, int value) {
         double centerX = x + w / 2.0;
         double centerY = y + h / 2.0;
@@ -231,15 +237,20 @@ public abstract class CellularAutomaton {
         }
     }
 
+    int drawingCells [][] = null;
+
+    void saveFrameForDrawing(){
+        drawingCells = cells;
+    }
     public Color getColorAt(int x, int y) {
-        if (getCell(x, y) == 1) {
+        if (getDrawingCell(x, y) == 1) {
             return new Color(189, 8, 255);
         } else {
             return new Color(10, 6, 7);
         }
     }
-
-    public int getCellsCount() {
-        return width * height;
+    public int getDrawingCell(int x, int y) {
+        return drawingCells[(x + width) % width][(y + height) % height];
+        //return cells[x % width][y % height];
     }
 }

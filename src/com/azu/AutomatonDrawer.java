@@ -1,21 +1,29 @@
 package com.azu;
 
 import ru.ege.engine.DrawableObject;
+import ru.ege.engine.EGEngine;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
 
 public class AutomatonDrawer implements DrawableObject {
     CellularAutomaton celluarAutomaton;
+    int left = 0;
+    int top =0;
+    int sizeX = 0;
+    int sizeY = 0;
 
     public AutomatonDrawer(CellularAutomaton celluarAutomaton) {
         this.celluarAutomaton = celluarAutomaton;
+        sizeX = EGEngine.i().getSize().width;
+        sizeY = EGEngine.i().getSize().height;
     }
 
     @Override
     public void drawAndUpdate(Graphics2D g, double v) {
 
-        drawGrid(g, 0,0,1920,1080, celluarAutomaton.getWidth() , celluarAutomaton.getHeight());
+        celluarAutomaton.saveFrameForDrawing();
+        drawGrid(g, left,top,sizeX,sizeY, celluarAutomaton.getWidth() , celluarAutomaton.getHeight());
         //celluarAutomaton.step();
     }
 
