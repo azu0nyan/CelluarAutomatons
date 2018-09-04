@@ -230,7 +230,7 @@ public abstract class CellularAutomaton {
                     cells[i % width][j % height] = value;
                 }
                 if (w <= h && rSquare >= Math.pow((centerX - i) * h / (double) w, 2) + Math.pow((centerY - j), 2)) {
-                    cells[i % width][j % height] = value;
+                    cells[(i + width) % width][j % height] = value;
                 }
 
             }
@@ -243,14 +243,38 @@ public abstract class CellularAutomaton {
         drawingCells = cells;
     }
     public Color getColorAt(int x, int y) {
-        if (getDrawingCell(x, y) == 1) {
-            return new Color(189, 8, 255);
-        } else {
-            return new Color(10, 6, 7);
+        switch (getDrawingCell(x, y)) {
+            case 0:
+                return new Color(10, 6, 7);
+            case 1:
+                return new Color(189, 8, 255);
+            case 2:
+                return new Color(194, 57, 114);
+            case 3:
+                return new Color(249, 255, 253);
+            default:
+                return new Color(10, 6, 7);
+
         }
     }
     public int getDrawingCell(int x, int y) {
         return drawingCells[(x + width) % width][(y + height) % height];
         //return cells[x % width][y % height];
+    }
+    //unsafe
+    public static int setLayer(int prevValue, int value, int layer){
+        return  prevValue + value<<layer;
+    }
+    public static int copyLayer(int source, int dest, int layer){
+        return dest + layer(source, layer)<<layer;
+    }
+    public static boolean is1(int value, int layer){
+        return (value>>layer) % 2 == 1;
+    }
+    public static boolean is0(int value, int layer){
+        return (value>>layer) % 2 == 0;
+    }
+    public static int layer(int value, int layer){
+        return (value>>layer) % 2;
     }
 }

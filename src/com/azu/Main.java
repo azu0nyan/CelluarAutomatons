@@ -13,14 +13,20 @@ public class Main {
         EGEngine.instance().startDrawingThread();
 
 
-        CellularAutomaton automaton = new TimeTunnelAutomaton(1920 /1   , 1080 /1 );
+        CellularAutomaton automaton = new TimeTunnelWithPlague(1920 /3   , 1080 /3 );
+        CellularAutomaton automaton2 = new TimeTunnelWithPlague(1920 /3   , 1080 /3 );
+        ((TimeTunnelWithPlague)automaton2).plagueIteration = 300;
+        ((TimeTunnelWithPlague)automaton2).doPlague = true;
+
 
         Random r = new Random();
         int seed = r.nextInt();
-        automaton.setSeed(seed);
         System.out.println("seed:" +  seed);
+        automaton.setSeed(seed);
+        automaton2.setSeed(seed);
 
         automaton.initTestData();
+        automaton2.initTestData();
 
 
         //CellularAutomaton automaton = new ParityAutomaton(512, 512);
@@ -28,7 +34,8 @@ public class Main {
        // automaton.fillRandom(1920*1800 / 4 /2, new int []{1});
        // automaton.fillRect(automaton.width / 2 - 16,automaton.height / 2 - 16, 32,32, 1);
 
-        AutomatonDrawer drawer = new AutomatonDrawer(automaton);
+        //AutomatonDrawer drawer = new AutomatonDrawer(automaton);
+        AutomatonDrawer drawer = new DoubleAutomatonDrawer(automaton, automaton2);
         try {
             Thread.sleep(1000);
         } catch (InterruptedException e) {
@@ -38,7 +45,7 @@ public class Main {
 
 
 
-       new Thread(()->{
+      /* new Thread(()->{
             try {
                 Thread.sleep(1000);
             } catch (InterruptedException e) {
@@ -48,6 +55,7 @@ public class Main {
             while (true){
                 long start = System.currentTimeMillis();
                 automaton.step();
+                automaton2.step();
                 long length = System.currentTimeMillis() - start;
                 try {
                     Thread.sleep(Math.max( desiredLength - length, 0));
@@ -56,7 +64,7 @@ public class Main {
                 }
             }
 
-        }).start();
+        }).start();*/
 
     }
 }

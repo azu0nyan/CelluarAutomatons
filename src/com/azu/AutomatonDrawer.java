@@ -7,14 +7,14 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 
 public class AutomatonDrawer implements DrawableObject {
-    CellularAutomaton celluarAutomaton;
+    CellularAutomaton automaton;
     int left = 0;
     int top =0;
     int sizeX = 0;
     int sizeY = 0;
 
     public AutomatonDrawer(CellularAutomaton celluarAutomaton) {
-        this.celluarAutomaton = celluarAutomaton;
+        this.automaton = celluarAutomaton;
         sizeX = EGEngine.i().getSize().width;
         sizeY = EGEngine.i().getSize().height;
     }
@@ -22,9 +22,9 @@ public class AutomatonDrawer implements DrawableObject {
     @Override
     public void drawAndUpdate(Graphics2D g, double v) {
 
-        celluarAutomaton.saveFrameForDrawing();
-        drawGrid(g, left,top,sizeX,sizeY, celluarAutomaton.getWidth() , celluarAutomaton.getHeight());
-        //celluarAutomaton.step();
+        automaton.saveFrameForDrawing();
+        drawGrid(g, left,top,sizeX,sizeY, automaton.getWidth() , automaton.getHeight());
+        //automaton.step();
     }
 
     private void drawGrid(Graphics2D g, int left, int top, int sizeX, int sizeY, int pointsX, int pointsY) {
@@ -36,7 +36,7 @@ public class AutomatonDrawer implements DrawableObject {
                 Color c;
 
 
-               c =  celluarAutomaton.getColorAt(px, py);
+                c =  getColorAt(px, py);
 
                 /*g.setColor(c);
                 g.drawLine(x, y, x, y);*/
@@ -45,6 +45,10 @@ public class AutomatonDrawer implements DrawableObject {
         }
         g.drawImage(img, left, top, null);
 
+    }
+
+    protected Color getColorAt(int px, int py){
+        return automaton.getColorAt(px, py);
     }
 
 }
