@@ -33,15 +33,15 @@ public abstract class CellularAutomaton {
     }
 
 
-
     long totalTime = 0;
+
     public void step() {
         long t = System.currentTimeMillis();
         automatonStep();
         long workTime = System.currentTimeMillis() - t;
         totalTime += workTime;
         iteration++;
-        System.out.println("Iteration:" + iteration + " time:" + workTime + "ms. avg:"  + (totalTime / iteration) + "ms.");
+        System.out.println("Iteration:" + iteration + " time:" + workTime + "ms. avg:" + (totalTime / iteration) + "ms.");
     }
 
 
@@ -144,6 +144,19 @@ public abstract class CellularAutomaton {
         return res;
     }
 
+    int getNeighboursCountInLayer(int x, int y, int layer) {
+        int res = 0;
+        res += getCellLayer(x - 1, y - 1, layer);
+        res += getCellLayer(x, y - 1, layer);
+        res += getCellLayer(x + 1, y - 1, layer);
+        res += getCellLayer(x - 1, y , layer);
+        res += getCellLayer(x + 1, y , layer);
+        res += getCellLayer(x - 1, y + 1, layer);
+        res += getCellLayer(x, y + 1, layer);
+        res += getCellLayer(x + 1, y + 1, layer);
+        return res;
+    }
+
     int getNeighboursCountWithValue(int x, int y, int value) {
         int res = 0;
         res += getCell(x - 1, y - 1) == value ? 1 : 0;
@@ -177,12 +190,22 @@ public abstract class CellularAutomaton {
     public void setXY(int x, int y, int value) {
         cells[x % width][y % height] = value;
     }
+
     //fillings
     private int seed = 1;
     Random r = new Random(seed);
+
     public void setSeed(int seed) {
         this.seed = seed;
         r = new Random(seed);
+    }
+    public void fillRandom(int[] values) {
+        for(int i = 0; i < width; i++){
+            for(int j = 0 ; j < height; j++){
+                int rv = values[r.nextInt(values.length)];
+                cells[i][j] = rv;
+            }
+        }
     }
     public void fillRandom(int count, int[] values) {
         for (int i = 0; i < count; i++) {
@@ -192,16 +215,18 @@ public abstract class CellularAutomaton {
             cells[rx][ry] = rv;
         }
     }
-    public void fillRandomRects(int wmin, int wmax, int hmin, int hmax, int count, int [] values){
-        for(int i = 0; i < count; i++){
+
+    public void fillRandomRects(int wmin, int wmax, int hmin, int hmax, int count, int[] values) {
+        for (int i = 0; i < count; i++) {
             int x = r.nextInt(width);
             int y = r.nextInt(height);
-            int w = (wmax ==wmin)?wmax:r.nextInt(wmax  -wmin) + wmin;
-            int h = (hmax == hmin)?hmax:r.nextInt( hmax - hmin) + hmin;
+            int w = (wmax == wmin) ? wmax : r.nextInt(wmax - wmin) + wmin;
+            int h = (hmax == hmin) ? hmax : r.nextInt(hmax - hmin) + hmin;
             int value = values[r.nextInt(values.length)];
             fillRect(x, y, w, h, value);
         }
     }
+
     public void fillRect(int x, int y, int w, int h, int value) {
         for (int i = x; i < x + w; i++) {
             for (int j = y; j < y + h; j++) {
@@ -209,12 +234,13 @@ public abstract class CellularAutomaton {
             }
         }
     }
-    public void fillRandomOvals(int wmin, int wmax, int hmin, int hmax, int count, int [] values){
-        for(int i = 0; i < count; i++){
+
+    public void fillRandomOvals(int wmin, int wmax, int hmin, int hmax, int count, int[] values) {
+        for (int i = 0; i < count; i++) {
             int x = r.nextInt(width);
             int y = r.nextInt(height);
-            int w = (wmax ==wmin)?wmax:r.nextInt(wmax  -wmin) + wmin;
-            int h = (hmax == hmin)?hmax:r.nextInt( hmax - hmin) + hmin;
+            int w = (wmax == wmin) ? wmax : r.nextInt(wmax - wmin) + wmin;
+            int h = (hmax == hmin) ? hmax : r.nextInt(hmax - hmin) + hmin;
             int value = values[r.nextInt(values.length)];
             fillOval(x, y, w, h, value);
         }
@@ -230,18 +256,19 @@ public abstract class CellularAutomaton {
                     cells[i % width][j % height] = value;
                 }
                 if (w <= h && rSquare >= Math.pow((centerX - i) * h / (double) w, 2) + Math.pow((centerY - j), 2)) {
-                    cells[(i + width) % width][j % height] = value;
+                    cells[(i + width) % width][(j + height) % height] = value;
                 }
 
             }
         }
     }
 
-    int drawingCells [][] = null;
+    int drawingCells[][] = null;
 
-    void saveFrameForDrawing(){
+    void saveFrameForDrawing() {
         drawingCells = cells;
     }
+
     public Color getColorAt(int x, int y) {
         switch (getDrawingCell(x, y)) {
             case 0:
@@ -257,24 +284,30 @@ public abstract class CellularAutomaton {
 
         }
     }
+
     public int getDrawingCell(int x, int y) {
         return drawingCells[(x + width) % width][(y + height) % height];
         //return cells[x % width][y % height];
     }
+
     //unsafe
-    public static int setLayer(int prevValue, int value, int layer){
-        return  prevValue + value<<layer;
+    public static int setLayer(int prevValue, int value, int layer) {
+        return prevValue + value << layer;
     }
-    public static int copyLayer(int source, int dest, int layer){
-        return dest + layer(source, layer)<<layer;
+
+    public static int copyLayer(int source, int dest, int layer) {
+        return dest + layer(source, layer) << layer;
     }
-    public static boolean is1(int value, int layer){
-        return (value>>layer) % 2 == 1;
+
+    public static boolean is1(int value, int layer) {
+        return (value >> layer) % 2 == 1;
     }
-    public static boolean is0(int value, int layer){
-        return (value>>layer) % 2 == 0;
+
+    public static boolean is0(int value, int layer) {
+        return (value >> layer) % 2 == 0;
     }
-    public static int layer(int value, int layer){
-        return (value>>layer) % 2;
+
+    public static int layer(int value, int layer) {
+        return (value >> layer) % 2;
     }
 }

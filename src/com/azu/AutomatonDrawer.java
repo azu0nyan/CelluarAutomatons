@@ -4,6 +4,8 @@ import ru.ege.engine.DrawableObject;
 import ru.ege.engine.EGEngine;
 
 import java.awt.*;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.awt.image.BufferedImage;
 
 public class AutomatonDrawer implements DrawableObject {
@@ -50,5 +52,6 @@ public class AutomatonDrawer implements DrawableObject {
     protected Color getColorAt(int px, int py){
         return automaton.getColorAt(px, py);
     }
+
 
 }
