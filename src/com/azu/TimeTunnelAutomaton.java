@@ -14,11 +14,11 @@ public class TimeTunnelAutomaton extends CellularAutomaton {
 
     public void initTestData() {
         //fillRect(width / 2 - 128, height / 2 - 128, 256, 256, 3);
-        //fillOval(width / 2 - 256, height / 2 - 256, 512, 512, 3);
+        fillOval(width / 2 - width / 4, height / 2 - height / 4, width / 2, height / 2, 3);
         //fillRect(width / 2 - 256, height / 2 - 256, 512, 512, 3);
-        fillRandomRects(2,2,2,2,128, new int[]{3});
+        /*fillRandomRects(2,2,2,2,128, new int[]{3});
         fillRandomRects(128,512,128,512,8, new int[]{3});
-        fillRandomOvals(128,256,128,256,8, new int[]{3});
+        fillRandomOvals(128,256,128,256,8, new int[]{3});*/
         torus = true;
     }
 

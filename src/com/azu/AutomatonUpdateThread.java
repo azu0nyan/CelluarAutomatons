@@ -10,7 +10,7 @@ public class AutomatonUpdateThread implements Runnable, KeyListener {
     long frameLength = 30;
     long waitBeforeStart = 1000;
     boolean pause = false;
-
+    boolean stop = false;
     public AutomatonUpdateThread(CellularAutomaton automaton) {
         if (automaton != null) {
             automatons.add(automaton);
@@ -25,7 +25,7 @@ public class AutomatonUpdateThread implements Runnable, KeyListener {
             e.printStackTrace();
         }
 
-        while (true) {
+        while (!stop) {
             long start = System.currentTimeMillis();
             if (!pause) {
                 for (CellularAutomaton automaton : automatons) {
@@ -40,6 +40,16 @@ public class AutomatonUpdateThread implements Runnable, KeyListener {
             }
         }
 
+    }
+    public void doSteps(int steps){
+        for(int i = 0; i < steps; i++){
+            for (CellularAutomaton automaton : automatons) {
+                automaton.step();
+            }
+        }
+    }
+    public void stop(){
+        stop = true;
     }
 
     @Override

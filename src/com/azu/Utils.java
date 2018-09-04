@@ -17,4 +17,8 @@ public class Utils {
 
         return new Color((int) r, (int) g, (int) b, (int) a);
     }
+
+    public static  int clamp(int min, int max, int v){
+        return Math.max(min,Math.min(max, v));
+    }
 }

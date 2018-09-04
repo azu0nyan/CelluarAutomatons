@@ -253,10 +253,10 @@ public abstract class CellularAutomaton {
         for (int i = x; i < x + w; i++) {
             for (int j = y; j < y + h; j++) {
                 if (w > h && rSquare >= Math.pow((centerX - i), 2) + Math.pow((centerY - j) * w / (double) h, 2)) {
-                    cells[i % width][j % height] = value;
+                    cells[i % width < 0? i % width + width : i % width][j % height <0? j % height + height : j % height] = value;
                 }
                 if (w <= h && rSquare >= Math.pow((centerX - i) * h / (double) w, 2) + Math.pow((centerY - j), 2)) {
-                    cells[(i + width) % width][(j + height) % height] = value;
+                    cells[i % width < 0? i % width + width : i % width][j % height <0? j % height + height : j % height] = value;
                 }
 
             }
