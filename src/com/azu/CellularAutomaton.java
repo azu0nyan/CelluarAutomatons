@@ -44,6 +44,15 @@ public abstract class CellularAutomaton {
         System.out.println("Iteration:" + iteration + " time:" + workTime + "ms. avg:" + (totalTime / iteration) + "ms.");
     }
 
+    void randomStep(){
+        int x = r.nextInt(width);
+        int y = r.nextInt(height);
+        cells[x][y] = getRandomStepCellValue(x, y);
+    }
+
+    int getRandomStepCellValue(int x, int y) {
+        return 0;
+    }
 
     void automatonStep() {
         if (concurrent) {
@@ -97,7 +106,12 @@ public abstract class CellularAutomaton {
         }
     }
 
+    //gets
     abstract int getNewCellValue(int x, int y);
+
+    int[] getSWNEValues(int x, int y) {
+        return new int[]{getCell(x - 1, y), getCell(x + 1, y), getCell(x, y - 1), getCell(x, y + 1)};
+    }
 
     int getSNWECNeighboursCountInLayer(int x, int y, int layer) {
         int res = 0;
@@ -149,8 +163,8 @@ public abstract class CellularAutomaton {
         res += getCellLayer(x - 1, y - 1, layer);
         res += getCellLayer(x, y - 1, layer);
         res += getCellLayer(x + 1, y - 1, layer);
-        res += getCellLayer(x - 1, y , layer);
-        res += getCellLayer(x + 1, y , layer);
+        res += getCellLayer(x - 1, y, layer);
+        res += getCellLayer(x + 1, y, layer);
         res += getCellLayer(x - 1, y + 1, layer);
         res += getCellLayer(x, y + 1, layer);
         res += getCellLayer(x + 1, y + 1, layer);
@@ -199,14 +213,16 @@ public abstract class CellularAutomaton {
         this.seed = seed;
         r = new Random(seed);
     }
+
     public void fillRandom(int[] values) {
-        for(int i = 0; i < width; i++){
-            for(int j = 0 ; j < height; j++){
+        for (int i = 0; i < width; i++) {
+            for (int j = 0; j < height; j++) {
                 int rv = values[r.nextInt(values.length)];
                 cells[i][j] = rv;
             }
         }
     }
+
     public void fillRandom(int count, int[] values) {
         for (int i = 0; i < count; i++) {
             int rx = r.nextInt(width);
@@ -253,10 +269,26 @@ public abstract class CellularAutomaton {
         for (int i = x; i < x + w; i++) {
             for (int j = y; j < y + h; j++) {
                 if (w > h && rSquare >= Math.pow((centerX - i), 2) + Math.pow((centerY - j) * w / (double) h, 2)) {
-                    cells[i % width < 0? i % width + width : i % width][j % height <0? j % height + height : j % height] = value;
+                    cells[i % width < 0 ? i % width + width : i % width][j % height < 0 ? j % height + height : j % height] = value;
                 }
                 if (w <= h && rSquare >= Math.pow((centerX - i) * h / (double) w, 2) + Math.pow((centerY - j), 2)) {
-                    cells[i % width < 0? i % width + width : i % width][j % height <0? j % height + height : j % height] = value;
+                    cells[i % width < 0 ? i % width + width : i % width][j % height < 0 ? j % height + height : j % height] = value;
+                }
+
+            }
+        }
+    }
+    public void fillOvalRandom(int x, int y, int w, int h, int [] values) {
+        double centerX = x + w / 2.0;
+        double centerY = y + h / 2.0;
+        double rSquare = Math.pow(Math.max(w / 2.0, h / 2.0), 2);
+        for (int i = x; i < x + w; i++) {
+            for (int j = y; j < y + h; j++) {
+                if (w > h && rSquare >= Math.pow((centerX - i), 2) + Math.pow((centerY - j) * w / (double) h, 2)) {
+                    cells[i % width < 0 ? i % width + width : i % width][j % height < 0 ? j % height + height : j % height] = values[r.nextInt(values.length)];
+                }
+                if (w <= h && rSquare >= Math.pow((centerX - i) * h / (double) w, 2) + Math.pow((centerY - j), 2)) {
+                    cells[i % width < 0 ? i % width + width : i % width][j % height < 0 ? j % height + height : j % height] = values[r.nextInt(values.length)];
                 }
 
             }

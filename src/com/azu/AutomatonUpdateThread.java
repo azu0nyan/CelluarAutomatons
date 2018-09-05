@@ -10,11 +10,31 @@ public class AutomatonUpdateThread implements Runnable, KeyListener {
     long frameLength = 30;
     long waitBeforeStart = 1000;
     boolean pause = false;
+    boolean pauseRandomSteps = false;
     boolean stop = false;
+    boolean randomSteps = false;
+    long randomStepsFreq = 0;
+
     public AutomatonUpdateThread(CellularAutomaton automaton) {
         if (automaton != null) {
             automatons.add(automaton);
         }
+    }
+    public void runRandomStepsThread(){
+        new Thread(() -> {
+            while (!stop) {
+                if (!pauseRandomSteps) {
+                    for (CellularAutomaton automaton : automatons) {
+                        automaton.randomStep();
+                    }
+                }
+                try {
+                    Thread.sleep(randomStepsFreq);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+        }).start();
     }
 
     @Override
@@ -24,7 +44,9 @@ public class AutomatonUpdateThread implements Runnable, KeyListener {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-
+        if (randomSteps) {
+            runRandomStepsThread();
+        }
         while (!stop) {
             long start = System.currentTimeMillis();
             if (!pause) {
@@ -41,14 +63,16 @@ public class AutomatonUpdateThread implements Runnable, KeyListener {
         }
 
     }
-    public void doSteps(int steps){
-        for(int i = 0; i < steps; i++){
+
+    public void doSteps(int steps) {
+        for (int i = 0; i < steps; i++) {
             for (CellularAutomaton automaton : automatons) {
                 automaton.step();
             }
         }
     }
-    public void stop(){
+
+    public void stop() {
         stop = true;
     }
 
@@ -71,10 +95,15 @@ public class AutomatonUpdateThread implements Runnable, KeyListener {
                 System.out.println("New frame length:" + frameLength);
                 break;
             case KeyEvent.VK_PAUSE:
-            case KeyEvent.VK_P:
             case KeyEvent.VK_SPACE:
                 pause = !pause;
+                pauseRandomSteps = !pauseRandomSteps;
                 break;
+            case KeyEvent.VK_R:
+                pauseRandomSteps = !pauseRandomSteps;
+                break;
+            case KeyEvent.VK_P:
+                pause = !pause;
         }
     }
 

@@ -21,4 +21,12 @@ public class Utils {
     public static  int clamp(int min, int max, int v){
         return Math.max(min,Math.min(max, v));
     }
+    static int x;
+    static final int a = 1103515245;
+    static final int c = 12345;
+    static final int m = (int) Math.pow(2, 31);
+    public static int fastRandom(){
+        x =(a * x + c) % m;
+        return x;
+    }
 }
