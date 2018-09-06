@@ -15,7 +15,7 @@ public class Main {
 
 
 
-        CellularAutomaton automaton = new RandomDiffusionAutomaton(1920   /4 , 1080  /4);
+        CellularAutomaton automaton = new RandomMovementAutomaton(1920   /4 , 1080  /4);
 
 
         Random r = new Random();
@@ -48,8 +48,9 @@ public class Main {
         AutomatonUpdateThread automatonUpdateThread = new AutomatonUpdateThread(automaton);
         automatonUpdateThread.waitBeforeStart = 1000;
         automatonUpdateThread.frameLength = 50;
-       // automatonUpdateThread.randomSteps = true;
-       // automatonUpdateThread.pauseRandomSteps = true;
+        automatonUpdateThread.pause = true;
+        automatonUpdateThread.randomSteps = true;
+        automatonUpdateThread.pauseRandomSteps = false;
         EGEngine.i().addKeyListener(automatonUpdateThread);
         new Thread(automatonUpdateThread).start();
 

@@ -20,6 +20,7 @@ public class AutomatonUpdateThread implements Runnable, KeyListener {
             automatons.add(automaton);
         }
     }
+
     public void runRandomStepsThread(){
         new Thread(() -> {
             while (!stop) {

@@ -202,7 +202,7 @@ public abstract class CellularAutomaton {
     }
 
     public void setXY(int x, int y, int value) {
-        cells[x % width][y % height] = value;
+        cells[x % width < 0 ? x % width + width : x % width][y % height < 0 ? y % height + height : y % height] = value;
     }
 
     //fillings
@@ -341,5 +341,11 @@ public abstract class CellularAutomaton {
 
     public static int layer(int value, int layer) {
         return (value >> layer) % 2;
+    }
+
+    public void swap(int x1, int y1, int x2, int y2){
+        int tmp = getCell(x1, y1);
+        setXY(x1, y1, getCell(x2, y2));
+        setXY(x2, y2, tmp);
     }
 }
